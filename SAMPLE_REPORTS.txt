@@ -1,0 +1,294 @@
+================================================================================
+MEDICAL DIAGNOSIS IMAGING - SAMPLE MEDICAL REPORTS
+================================================================================
+
+Use these sample reports to test the Medical Diagnosis Imaging Visualizer.
+Copy and paste any of these into the "Paste Medical Report Text" field.
+
+================================================================================
+SAMPLE 1: FRACTURE AND ORTHOPEDIC INJURY
+================================================================================
+
+Patient Name: John Smith | Age: 45 | Date: 2024-11-07
+
+CLINICAL HISTORY:
+Patient presented to the emergency department following a fall from a ladder.
+Patient reports severe pain in the left leg and right shoulder.
+
+IMAGING FINDINGS:
+X-ray examination of the left femur reveals a severe comminuted fracture of the
+left femoral shaft with significant displacement. The fracture line extends
+from the mid-shaft to the distal third of the femur. Moderate soft tissue
+swelling is noted around the fracture site.
+
+Additionally, radiographs of the right shoulder demonstrate a moderate
+anterior dislocation of the right shoulder joint with associated rotator cuff
+strain. The humeral head is displaced anteriorly relative to the glenoid fossa.
+
+ASSESSMENT:
+1. Severe fracture of left femur with moderate soft tissue involvement
+2. Moderate dislocation of right shoulder with rotator cuff strain
+3. Mild pain reported in lower back region
+
+RECOMMENDATION:
+Immediate orthopedic consultation and surgical intervention recommended.
+
+================================================================================
+SAMPLE 2: CHEST AND RESPIRATORY FINDINGS
+================================================================================
+
+Patient Name: Sarah Johnson | Age: 52 | Date: 2024-11-06
+
+CLINICAL HISTORY:
+Patient presents with persistent cough and chest discomfort for 2 weeks.
+
+CHEST X-RAY FINDINGS:
+Frontal and lateral chest radiographs show:
+- Severe inflammation in the left lung with consolidation in the upper lobe
+- Moderate pleural effusion noted on the left side
+- Heart appears normal in size and contour
+- Mild inflammation visible in the right lung base
+- No acute abnormalities in the right hemidiaphragm
+
+IMPRESSION:
+1. Severe left upper lobe pneumonia with moderate pleural effusion
+2. Mild right lower lobe infiltrate
+3. Normal cardiac silhouette
+
+CLINICAL CORRELATION:
+Findings are consistent with bacterial pneumonia. Patient should be started on
+appropriate antibiotic therapy.
+
+================================================================================
+SAMPLE 3: ABDOMINAL AND GASTROINTESTINAL
+================================================================================
+
+Patient Name: Michael Chen | Age: 38 | Date: 2024-11-05
+
+CLINICAL HISTORY:
+Patient presents with acute abdominal pain and nausea.
+
+ABDOMINAL CT FINDINGS:
+CT examination of the abdomen with IV contrast reveals:
+- Severe inflammation of the stomach with gastric wall thickening
+- Moderate swelling of the liver with fatty infiltration
+- Mild inflammation noted in the right kidney
+- No significant abnormalities in the spleen
+- Pancreas appears normal
+
+FINDINGS:
+1. Severe acute gastritis with moderate gastric inflammation
+2. Moderate hepatic steatosis (fatty liver)
+3. Mild right renal inflammation
+4. No acute appendicitis or bowel obstruction
+
+RECOMMENDATION:
+Gastroenterology consultation recommended. Dietary modifications and
+anti-inflammatory medications advised.
+
+================================================================================
+SAMPLE 4: NEUROLOGICAL AND SPINAL
+================================================================================
+
+Patient Name: Emily Rodriguez | Age: 41 | Date: 2024-11-04
+
+CLINICAL HISTORY:
+Patient reports severe back pain with mild numbness in lower extremities.
+
+MRI FINDINGS:
+Magnetic resonance imaging of the lumbar spine demonstrates:
+- Severe degenerative disc disease at L4-L5 level with moderate disc herniation
+- Mild spinal stenosis at the L5-S1 level
+- Moderate inflammation of the paraspinal muscles
+- Cervical spine shows mild inflammation in the neck region
+- No significant abnormalities in the thoracic spine
+
+IMPRESSION:
+1. Severe lumbar disc herniation at L4-L5 with moderate stenosis
+2. Mild cervical inflammation
+3. Moderate paraspinal muscle inflammation
+4. Degenerative changes consistent with age
+
+CLINICAL RECOMMENDATION:
+Physical therapy and conservative management initially. Consider epidural
+steroid injection if symptoms persist.
+
+================================================================================
+SAMPLE 5: MULTI-SYSTEM TRAUMA
+================================================================================
+
+Patient Name: David Thompson | Age: 56 | Date: 2024-11-03
+
+CLINICAL HISTORY:
+Motor vehicle accident. Patient presents with multiple injuries.
+
+TRAUMA ASSESSMENT:
+- Severe fracture of right femur with significant displacement
+- Moderate rib fractures on the left side (ribs 5-7)
+- Severe contusion and swelling in the right knee
+- Mild inflammation in the left ankle
+- Moderate chest wall trauma with soft tissue damage
+- Mild abdominal wall contusion
+
+IMAGING SUMMARY:
+1. Severe right femoral fracture - requires surgical intervention
+2. Moderate left rib fractures - stable, no pneumothorax
+3. Severe right knee injury with moderate soft tissue swelling
+4. Mild left ankle sprain
+5. Moderate chest wall trauma without cardiac involvement
+
+PRIORITY:
+Immediate orthopedic surgery for femoral fracture. Chest imaging clear of
+pneumothorax. Patient stable for transfer.
+
+================================================================================
+SAMPLE 6: CARDIOVASCULAR AND CARDIAC
+================================================================================
+
+Patient Name: Patricia Williams | Age: 64 | Date: 2024-11-02
+
+CLINICAL HISTORY:
+Patient presents with chest pain and shortness of breath.
+
+CARDIAC IMAGING:
+Echocardiography and cardiac CT reveal:
+- Moderate left ventricular hypertrophy
+- Mild mitral valve regurgitation
+- Severe coronary artery disease in the left anterior descending artery
+- Moderate narrowing of the right coronary artery
+- Mild aortic valve sclerosis
+- Normal right ventricular function
+
+FINDINGS:
+1. Severe left anterior descending coronary artery stenosis
+2. Moderate right coronary artery disease
+3. Moderate left ventricular hypertrophy
+4. Mild mitral and aortic valve involvement
+
+RECOMMENDATION:
+Cardiology consultation. Consider coronary angiography and possible
+intervention. Medication optimization recommended.
+
+================================================================================
+SAMPLE 7: HEAD AND NEUROLOGICAL IMAGING
+================================================================================
+
+Patient Name: Robert Martinez | Age: 35 | Date: 2024-11-01
+
+CLINICAL HISTORY:
+Patient presents with severe headache and mild vision changes.
+
+BRAIN MRI FINDINGS:
+MRI of the brain with and without contrast shows:
+- Severe inflammation in the left temporal lobe
+- Moderate swelling in the right frontal lobe
+- Mild abnormality in the left occipital region
+- Cervical spine shows mild inflammation
+- No acute intracranial hemorrhage
+
+IMPRESSION:
+1. Severe left temporal lobe inflammation
+2. Moderate right frontal lobe edema
+3. Mild left occipital region abnormality
+4. Mild cervical spine inflammation
+
+CLINICAL CORRELATION:
+Findings may be consistent with viral encephalitis or inflammatory process.
+Neurology consultation recommended. Lumbar puncture may be indicated.
+
+================================================================================
+SAMPLE 8: MUSCULOSKELETAL AND JOINT INJURIES
+================================================================================
+
+Patient Name: Jennifer Lee | Age: 29 | Date: 2024-10-31
+
+CLINICAL HISTORY:
+Sports injury during basketball game. Patient reports severe knee pain.
+
+ORTHOPEDIC IMAGING:
+MRI of the right knee demonstrates:
+- Severe anterior cruciate ligament (ACL) tear
+- Moderate meniscal tear in the medial meniscus
+- Moderate joint effusion
+- Mild lateral collateral ligament strain
+- Mild patellar inflammation
+
+FINDINGS:
+1. Severe ACL rupture - complete tear
+2. Moderate medial meniscus tear
+3. Moderate knee joint effusion
+4. Mild lateral collateral ligament injury
+5. Mild patellar inflammation
+
+RECOMMENDATION:
+Orthopedic surgery consultation. ACL reconstruction likely needed.
+Conservative management with physical therapy initially.
+
+================================================================================
+SAMPLE 9: RESPIRATORY AND PULMONARY
+================================================================================
+
+Patient Name: James Wilson | Age: 58 | Date: 2024-10-30
+
+CLINICAL HISTORY:
+Chronic smoker presenting with persistent cough and dyspnea.
+
+PULMONARY FINDINGS:
+High-resolution CT of the chest reveals:
+- Severe emphysema in the upper lobes bilaterally
+- Moderate chronic obstructive pulmonary disease (COPD) changes
+- Mild bronchitis in the left lower lobe
+- Severe airway inflammation throughout both lungs
+- Moderate bronchial wall thickening
+
+IMPRESSION:
+1. Severe bilateral emphysema
+2. Moderate COPD with severe airway inflammation
+3. Mild left lower lobe bronchitis
+4. Moderate bronchial wall thickening
+
+RECOMMENDATION:
+Pulmonology consultation. Smoking cessation strongly advised. Consider
+bronchodilator therapy and pulmonary rehabilitation.
+
+================================================================================
+SAMPLE 10: GENERAL MULTI-SYSTEM ASSESSMENT
+================================================================================
+
+Patient Name: Lisa Anderson | Age: 47 | Date: 2024-10-29
+
+CLINICAL HISTORY:
+Routine physical examination with multiple complaints.
+
+CLINICAL FINDINGS:
+- Severe inflammation in the right shoulder with moderate rotator cuff involvement
+- Moderate swelling in both ankles with mild inflammation
+- Mild pain in the lower back region
+- Moderate inflammation in the right knee
+- Severe headache reported (no imaging abnormality)
+- Mild inflammation in the neck region
+
+ASSESSMENT:
+1. Severe right shoulder inflammation with moderate rotator cuff strain
+2. Moderate bilateral ankle swelling and inflammation
+3. Mild lumbar spine inflammation
+4. Moderate right knee inflammation
+5. Mild cervical spine inflammation
+
+RECOMMENDATION:
+Physical therapy for shoulder and lower extremities. Anti-inflammatory
+medication. Follow-up imaging if symptoms persist.
+
+================================================================================
+
+INSTRUCTIONS FOR USE:
+1. Copy any of the above medical reports
+2. Paste into the "Paste Medical Report Text" field in the Medical Diagnosis Visualizer
+3. Click "Analyze Report"
+4. View the interactive body visualization with highlighted problem areas
+5. Check the findings list to see extracted medical conditions
+
+The system will automatically extract body parts, conditions, and severity levels
+from the medical report text and display them on the interactive body diagram.
+
+================================================================================

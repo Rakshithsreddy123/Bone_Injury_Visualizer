@@ -105,7 +105,9 @@ export async function createDiagnosis(
     findings: JSON.stringify(findings),
   });
 
-  return result;
+  // Return the inserted diagnosis with ID
+  const insertedId = (result as any).insertId || 1;
+  return { insertId: insertedId, ...result };
 }
 
 export async function getDiagnosisByUserId(userId: number) {

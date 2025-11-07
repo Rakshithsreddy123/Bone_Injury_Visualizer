@@ -23,4 +23,6 @@
 - [ ] LLM integration for actual NLP (optional enhancement)
 - [x] Error handling and validation
 - [x] Loading states and feedback
-- [ ] Testing and bug fixes
+- [x] Testing and bug fixes
+- [x] Fixed diagnosis creation mutation error handling
+- [x] Fixed database result ID extraction

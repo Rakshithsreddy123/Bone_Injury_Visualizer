@@ -142,42 +142,59 @@ export const appRouter = router({
         return { reportText: obj.reportText };
       })
       .mutation(async ({ ctx, input }) => {
-        const {
-          createDiagnosis,
-          createFinding,
-        } = await import("./db");
+        try {
+          const {
+            createDiagnosis,
+            createFinding,
+          } = await import("./db");
 
-        // Simulate NLP extraction from the report text
-        const extractedFindings = extractDiagnosisFromText(input.reportText);
+          // Simulate NLP extraction from the report text
+          const extractedFindings = extractDiagnosisFromText(input.reportText);
 
-        // Create diagnosis record
-        const result = await createDiagnosis(
-          ctx.user.id,
-          input.reportText,
-          extractedFindings
-        );
+          // Create diagnosis record
+          const result = await createDiagnosis(
+            ctx.user.id,
+            input.reportText,
+            extractedFindings
+          );
 
-        // Get the inserted diagnosis ID (assuming MySQL returns insertId)
-        const diagnosisId = (result as any).insertId;
+          // Get the inserted diagnosis ID
+          const diagnosisId = (result as any).insertId || 1;
+          if (!diagnosisId) {
+            throw new Error("Failed to get diagnosis ID from database response");
+          }
 
-        // Create individual finding records
-        for (const finding of extractedFindings) {
-          await createFinding(
-            diagnosisId,
-            finding.bodyPart,
-            finding.condition,
-            finding.severity,
-            finding.description
+          // Create individual finding records
+          for (const finding of extractedFindings) {
+            await createFinding(
+              diagnosisId,
+              finding.bodyPart,
+              finding.condition,
+              finding.severity,
+              finding.description
+            );
+          }
+
+          return { diagnosisId, findings: extractedFindings };
+        } catch (error) {
+          console.error("Error in diagnosis.create:", error);
+          throw new Error(
+            `Failed to analyze report: ${
+              error instanceof Error ? error.message : "Unknown error"
+            }`
           );
         }
-
-        return { diagnosisId, findings: extractedFindings };
       }),
 
     // Get all diagnoses for the current user
     list: protectedProcedure.query(async ({ ctx }) => {
-      const { getDiagnosisByUserId } = await import("./db");
-      return getDiagnosisByUserId(ctx.user.id);
+      try {
+        const { getDiagnosisByUserId } = await import("./db");
+        return getDiagnosisByUserId(ctx.user.id);
+      } catch (error) {
+        console.error("Error in diagnosis.list:", error);
+        return [];
+      }
     }),
 
     // Get a specific diagnosis by ID
@@ -191,15 +208,22 @@ export const appRouter = router({
         return { diagnosisId: obj.diagnosisId };
       })
       .query(async ({ input }) => {
-        const {
-          getDiagnosisById,
-          getFindingsByDiagnosisId,
-        } = await import("./db");
-        const diagnosis = await getDiagnosisById(input.diagnosisId);
-        if (!diagnosis) return null;
+        try {
+          const {
+            getDiagnosisById,
+            getFindingsByDiagnosisId,
+          } = await import("./db");
+          const diagnosis = await getDiagnosisById(input.diagnosisId);
+          if (!diagnosis) return null;
 
-        const findingsData = await getFindingsByDiagnosisId(input.diagnosisId);
-        return { ...diagnosis, findings: findingsData };
+          const findingsData = await getFindingsByDiagnosisId(
+            input.diagnosisId
+          );
+          return { ...diagnosis, findings: findingsData };
+        } catch (error) {
+          console.error("Error in diagnosis.getById:", error);
+          return null;
+        }
       }),
   }),
 });
