@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import { diagnoses, findings } from "../drizzle/schema";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -89,4 +90,68 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Diagnosis queries
+export async function createDiagnosis(
+  userId: number,
+  reportText: string,
+  findings: any[]
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.insert(diagnoses).values({
+    userId,
+    reportText,
+    findings: JSON.stringify(findings),
+  });
+
+  return result;
+}
+
+export async function getDiagnosisByUserId(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  return db.select().from(diagnoses).where(eq(diagnoses.userId, userId));
+}
+
+export async function getDiagnosisById(diagnosisId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db
+    .select()
+    .from(diagnoses)
+    .where(eq(diagnoses.id, diagnosisId))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createFinding(
+  diagnosisId: number,
+  bodyPart: string,
+  condition: string,
+  severity: "severe" | "moderate" | "mild",
+  description?: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  return db.insert(findings).values({
+    diagnosisId,
+    bodyPart,
+    condition,
+    severity,
+    description,
+  });
+}
+
+export async function getFindingsByDiagnosisId(diagnosisId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  return db.select().from(findings).where(eq(findings.diagnosisId, diagnosisId));
+}
+
+

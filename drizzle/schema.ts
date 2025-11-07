@@ -25,4 +25,29 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here
+// Diagnosis records table
+export const diagnoses = mysqlTable("diagnoses", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id),
+  reportText: text("reportText").notNull(),
+  findings: text("findings").notNull(), // JSON string of extracted findings
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Diagnosis = typeof diagnoses.$inferSelect;
+export type InsertDiagnosis = typeof diagnoses.$inferInsert;
+
+// Visualization findings (body parts with affected areas)
+export const findings = mysqlTable("findings", {
+  id: int("id").autoincrement().primaryKey(),
+  diagnosisId: int("diagnosisId").notNull().references(() => diagnoses.id),
+  bodyPart: varchar("bodyPart", { length: 128 }).notNull(), // e.g., "left shoulder", "right hip"
+  condition: varchar("condition", { length: 256 }).notNull(), // e.g., "fracture", "lesion"
+  severity: mysqlEnum("severity", ["severe", "moderate", "mild"]).notNull(),
+  description: text("description"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Finding = typeof findings.$inferSelect;
+export type InsertFinding = typeof findings.$inferInsert;
