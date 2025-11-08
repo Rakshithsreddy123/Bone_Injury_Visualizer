@@ -2,6 +2,7 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { generateImage } from "./_core/imageGeneration";
 
 /**
  * Simulate NLP extraction from medical report text
@@ -116,6 +117,28 @@ function extractDiagnosisFromText(reportText: string) {
   return findings;
 }
 
+/**
+ * Generate a detailed prompt for AI image generation based on findings
+ */
+function generateImagePrompt(findings: any[]): string {
+  if (!findings || findings.length === 0) {
+    return "Medical X-ray visualization of human body, professional medical imaging style";
+  }
+
+  // Build a detailed prompt based on findings
+  const bodyParts = findings.map((f) => f.bodyPart).join(", ");
+  const conditions = findings
+    .map((f) => `${f.condition} (${f.severity})`)
+    .join(", ");
+
+  return `Professional medical X-ray visualization showing ${bodyParts}. 
+Conditions: ${conditions}. 
+Style: Realistic medical imaging, X-ray or CT scan style, with color-coded severity indicators.
+Severe areas highlighted in red, moderate in orange, mild in yellow.
+High quality medical illustration, anatomically accurate, professional medical imaging style.
+Black background, clear anatomical details, clinical appearance.`;
+}
+
 export const appRouter = router({
   // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
@@ -146,6 +169,7 @@ export const appRouter = router({
           const {
             createDiagnosis,
             createFinding,
+            updateDiagnosisImage,
           } = await import("./db");
 
           // Simulate NLP extraction from the report text
@@ -175,7 +199,32 @@ export const appRouter = router({
             );
           }
 
-          return { diagnosisId, findings: extractedFindings };
+          // Generate AI image based on findings
+          let imageUrl: string | null = null;
+          try {
+            const prompt = generateImagePrompt(extractedFindings);
+            console.log("Generating image with prompt:", prompt);
+
+            const imageResult = await generateImage({
+              prompt,
+            });
+
+            if (imageResult && imageResult.url) {
+              imageUrl = imageResult.url;
+              // Update diagnosis with the generated image URL
+              await updateDiagnosisImage(diagnosisId, imageUrl);
+              console.log("Image generated successfully:", imageUrl);
+            }
+          } catch (imageError) {
+            console.warn("Failed to generate image:", imageError);
+            // Continue without image - this is not a critical failure
+          }
+
+          return {
+            diagnosisId,
+            findings: extractedFindings,
+            imageUrl: imageUrl || null,
+          };
         } catch (error) {
           console.error("Error in diagnosis.create:", error);
           throw new Error(

@@ -1,0 +1,1 @@
+ALTER TABLE `diagnoses` ADD `generatedImageUrl` varchar(500);

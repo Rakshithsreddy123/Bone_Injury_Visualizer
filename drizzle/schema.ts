@@ -31,6 +31,7 @@ export const diagnoses = mysqlTable("diagnoses", {
   userId: int("userId").notNull().references(() => users.id),
   reportText: text("reportText").notNull(),
   findings: text("findings").notNull(), // JSON string of extracted findings
+  generatedImageUrl: varchar("generatedImageUrl", { length: 500 }), // AI-generated image URL
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

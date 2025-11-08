@@ -15,6 +15,13 @@
       "when": 1762495194649,
       "tag": "0001_complete_squadron_sinister",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1762502965000,
+      "tag": "0002_dusty_ben_grimm",
+      "breakpoints": true
     }
   ]
 }

@@ -130,6 +130,19 @@ export async function getDiagnosisById(diagnosisId: number) {
   return result.length > 0 ? result[0] : null;
 }
 
+export async function updateDiagnosisImage(
+  diagnosisId: number,
+  imageUrl: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  return db
+    .update(diagnoses)
+    .set({ generatedImageUrl: imageUrl })
+    .where(eq(diagnoses.id, diagnosisId));
+}
+
 export async function createFinding(
   diagnosisId: number,
   bodyPart: string,
