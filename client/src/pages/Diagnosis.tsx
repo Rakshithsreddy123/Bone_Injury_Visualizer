@@ -32,9 +32,7 @@ export default function Diagnosis() {
   const [reportText, setReportText] = useState("");
   const [findings, setFindings] = useState<Finding[]>([]);
   const [showVisualization, setShowVisualization] = useState(false);
-  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(
-    null
-  );
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [, navigate] = useLocation();
 
   // tRPC mutations and queries
@@ -53,8 +51,9 @@ export default function Diagnosis() {
       });
 
       setFindings(result.findings);
-      setGeneratedImageUrl(result.imageUrl);
       setShowVisualization(true);
+      // Image will be generated asynchronously on the backend
+      setGeneratedImageUrl(null);
 
       // Refresh diagnosis history
       if (listDiagnosisQuery.refetch) {
@@ -281,13 +280,13 @@ export default function Diagnosis() {
                       <div className="flex items-center gap-2">
                         <div className="w-4 h-4 rounded bg-amber-500"></div>
                         <span className="text-sm text-gray-700">
-                          Moderate - Significant concern
+                          Moderate - Significant condition
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-4 h-4 rounded bg-yellow-500"></div>
                         <span className="text-sm text-gray-700">
-                          Mild - Minor issue
+                          Mild - Minor condition
                         </span>
                       </div>
                     </div>
@@ -295,54 +294,20 @@ export default function Diagnosis() {
                 </Card>
               </>
             ) : (
-              <Card className="border-2 border-dashed border-gray-300 h-96 flex items-center justify-center">
+              <Card className="border-2 border-gray-200 shadow-lg h-full flex items-center justify-center min-h-96">
                 <CardContent className="text-center space-y-4">
-                  <div className="text-6xl">📋</div>
-                  <p className="text-gray-600 font-medium">
-                    Enter a medical report to see AI-generated visualization
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    The system will analyze the report and generate a realistic
-                    medical image
+                  <div className="text-6xl">📊</div>
+                  <h3 className="text-xl font-semibold text-gray-700">
+                    No Analysis Yet
+                  </h3>
+                  <p className="text-gray-600">
+                    Enter a medical report and click "Analyze Report" to see the visualization
                   </p>
                 </CardContent>
               </Card>
             )}
           </div>
         </div>
-
-        {/* History Section */}
-        {listDiagnosisQuery.data && listDiagnosisQuery.data.length > 0 && (
-          <Card className="border-2 border-green-200 shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">
-              <CardTitle>Recent Diagnoses</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {listDiagnosisQuery.data.map((diagnosis: any) => (
-                  <div
-                    key={diagnosis.id}
-                    className="p-4 border-2 border-green-200 rounded-lg hover:shadow-md transition-shadow"
-                  >
-                    <p className="text-sm text-gray-600 mb-2">
-                      {new Date(diagnosis.createdAt).toLocaleDateString()}
-                    </p>
-                    <p className="text-sm text-gray-700 line-clamp-3">
-                      {diagnosis.reportText}
-                    </p>
-                    {diagnosis.generatedImageUrl && (
-                      <img
-                        src={diagnosis.generatedImageUrl}
-                        alt="Previous diagnosis"
-                        className="mt-3 w-full h-24 object-cover rounded border border-green-200"
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
       </div>
     </div>
   );

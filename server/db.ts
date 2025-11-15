@@ -170,3 +170,43 @@ export async function getFindingsByDiagnosisId(diagnosisId: number) {
 }
 
 
+
+// Simple authentication functions
+export async function getUserByUsername(username: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createUser(
+  username: string,
+  passwordHash: string,
+  name: string,
+  email?: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.insert(users).values({
+    openId: `simple_${username}_${Date.now()}`,
+    username,
+    passwordHash,
+    name,
+    email,
+    loginMethod: "simple",
+    role: "user",
+  });
+
+  const insertedId = (result as any).insertId || 1;
+  return { insertId: insertedId, ...result };
+}
+
+export async function getUserById(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}

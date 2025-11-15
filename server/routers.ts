@@ -3,6 +3,21 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { generateImage } from "./_core/imageGeneration";
+import crypto from "crypto";
+
+/**
+ * Hash password using SHA-256
+ */
+function hashPassword(password: string): string {
+  return crypto.createHash("sha256").update(password).digest("hex");
+}
+
+/**
+ * Verify password against hash
+ */
+function verifyPassword(password: string, hash: string): boolean {
+  return hashPassword(password) === hash;
+}
 
 /**
  * Simulate NLP extraction from medical report text
@@ -48,58 +63,73 @@ function extractDiagnosisFromText(reportText: string) {
   const conditions = [
     "fracture",
     "break",
-    "crack",
-    "lesion",
-    "tumor",
+    "fracture",
+    "sprain",
+    "strain",
     "inflammation",
     "swelling",
     "pain",
-    "strain",
-    "sprain",
+    "lesion",
+    "tumor",
+    "cyst",
+    "stenosis",
+    "herniation",
+    "dislocation",
+    "subluxation",
+    "arthritis",
+    "pneumonia",
+    "infection",
+    "edema",
+    "fibrosis",
+    "necrosis",
+    "hemorrhage",
+    "bleeding",
+    "contusion",
+    "laceration",
     "tear",
     "rupture",
-    "dislocation",
-    "disease",
-    "abnormality",
-    "damage",
   ];
 
-  const severityKeywords = {
-    severe: ["severe", "critical", "acute", "serious", "major"],
-    moderate: ["moderate", "significant", "notable"],
-    mild: ["mild", "minor", "slight", "small"],
+  const severities = {
+    severe: ["severe", "critical", "acute", "major", "significant"],
+    moderate: ["moderate", "moderate", "notable", "substantial"],
+    mild: ["mild", "minor", "slight", "minimal", "small"],
   };
 
+  // Extract findings from text
   const lowerText = reportText.toLowerCase();
 
-  // Extract findings based on patterns
   for (const bodyPart of bodyParts) {
-    for (const condition of conditions) {
-      const pattern = new RegExp(
-        `(\\b${bodyPart}\\b.*?${condition}|${condition}.*?\\b${bodyPart}\\b)`,
-        "gi"
-      );
-      const matches = lowerText.match(pattern);
+    const bodyPartRegex = new RegExp(`\\b${bodyPart}\\b`, "gi");
+    const bodyPartMatches = reportText.match(bodyPartRegex);
 
-      if (matches) {
-        // Determine severity
-        let severity: "severe" | "moderate" | "mild" = "mild";
-        const matchText = matches[0].toLowerCase();
+    if (bodyPartMatches) {
+      for (const condition of conditions) {
+        const conditionRegex = new RegExp(
+          `\\b${condition}\\b.*?${bodyPart}|${bodyPart}.*?\\b${condition}\\b`,
+          "gi"
+        );
+        const matches = reportText.match(conditionRegex);
 
-        if (severityKeywords.severe.some((kw) => matchText.includes(kw))) {
-          severity = "severe";
-        } else if (
-          severityKeywords.moderate.some((kw) => matchText.includes(kw))
-        ) {
-          severity = "moderate";
+        if (matches) {
+          let severity: "severe" | "moderate" | "mild" = "mild";
+
+          // Determine severity
+          for (const [sev, keywords] of Object.entries(severities)) {
+            if (keywords.some((kw) => matches[0].toLowerCase().includes(kw))) {
+              severity = sev as "severe" | "moderate" | "mild";
+              break;
+            }
+          }
+
+          findings.push({
+            bodyPart: bodyPart.charAt(0).toUpperCase() + bodyPart.slice(1),
+            condition:
+              condition.charAt(0).toUpperCase() + condition.slice(1),
+            severity,
+            description: matches[0],
+          });
         }
-
-        findings.push({
-          bodyPart: bodyPart.charAt(0).toUpperCase() + bodyPart.slice(1),
-          condition: condition.charAt(0).toUpperCase() + condition.slice(1),
-          severity,
-          description: matches[0],
-        });
       }
     }
   }
@@ -144,6 +174,116 @@ export const appRouter = router({
   system: systemRouter,
   auth: router({
     me: publicProcedure.query((opts) => opts.ctx.user),
+    
+    // Simple login with username and password
+    login: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val !== "object" || val === null)
+          throw new Error("Invalid input");
+        const obj = val as Record<string, unknown>;
+        if (typeof obj.username !== "string")
+          throw new Error("username must be a string");
+        if (typeof obj.password !== "string")
+          throw new Error("password must be a string");
+        return { username: obj.username, password: obj.password };
+      })
+      .mutation(async ({ ctx, input }) => {
+        try {
+          const { getUserByUsername } = await import("./db");
+          
+          const user = await getUserByUsername(input.username);
+          if (!user) {
+            throw new Error("Invalid username or password");
+          }
+
+          if (!user.passwordHash || !verifyPassword(input.password, user.passwordHash)) {
+            throw new Error("Invalid username or password");
+          }
+
+          // Set session cookie
+          const cookieOptions = getSessionCookieOptions(ctx.req);
+          ctx.res.cookie(COOKIE_NAME, JSON.stringify(user), cookieOptions);
+
+          return {
+            success: true,
+            user: {
+              id: user.id,
+              username: user.username,
+              name: user.name,
+              email: user.email,
+              role: user.role,
+            },
+          };
+        } catch (error) {
+          throw new Error(error instanceof Error ? error.message : "Login failed");
+        }
+      }),
+
+    // Simple registration with username and password
+    register: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val !== "object" || val === null)
+          throw new Error("Invalid input");
+        const obj = val as Record<string, unknown>;
+        if (typeof obj.username !== "string")
+          throw new Error("username must be a string");
+        if (typeof obj.password !== "string")
+          throw new Error("password must be a string");
+        if (typeof obj.name !== "string")
+          throw new Error("name must be a string");
+        return {
+          username: obj.username,
+          password: obj.password,
+          name: obj.name,
+          email: obj.email as string | undefined,
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        try {
+          const { getUserByUsername, createUser } = await import("./db");
+          
+          // Check if user already exists
+          const existingUser = await getUserByUsername(input.username);
+          if (existingUser) {
+            throw new Error("Username already exists");
+          }
+
+          // Create new user
+          const passwordHash = hashPassword(input.password);
+          const result = await createUser(
+            input.username,
+            passwordHash,
+            input.name,
+            input.email
+          );
+
+          const newUser = await import("./db").then((m) =>
+            m.getUserById((result as any).insertId)
+          );
+
+          if (!newUser) {
+            throw new Error("Failed to create user");
+          }
+
+          // Set session cookie
+          const cookieOptions = getSessionCookieOptions(ctx.req);
+          ctx.res.cookie(COOKIE_NAME, JSON.stringify(newUser), cookieOptions);
+
+          return {
+            success: true,
+            user: {
+              id: newUser.id,
+              username: newUser.username,
+              name: newUser.name,
+              email: newUser.email,
+              role: newUser.role,
+            },
+          };
+        } catch (error) {
+          throw new Error(error instanceof Error ? error.message : "Registration failed");
+        }
+      }),
+
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
@@ -200,37 +340,27 @@ export const appRouter = router({
           }
 
           // Generate AI image based on findings
-          let imageUrl: string | null = null;
           try {
             const prompt = generateImagePrompt(extractedFindings);
-            console.log("Generating image with prompt:", prompt);
-
-            const imageResult = await generateImage({
-              prompt,
-            });
+            const imageResult = await generateImage({ prompt });
 
             if (imageResult && imageResult.url) {
-              imageUrl = imageResult.url;
-              // Update diagnosis with the generated image URL
-              await updateDiagnosisImage(diagnosisId, imageUrl);
-              console.log("Image generated successfully:", imageUrl);
+              await updateDiagnosisImage(diagnosisId, imageResult.url);
             }
           } catch (imageError) {
             console.warn("Failed to generate image:", imageError);
-            // Continue without image - this is not a critical failure
+            // Continue without image if generation fails
           }
 
           return {
+            success: true,
             diagnosisId,
             findings: extractedFindings,
-            imageUrl: imageUrl || null,
           };
         } catch (error) {
-          console.error("Error in diagnosis.create:", error);
+          console.error("Diagnosis creation error:", error);
           throw new Error(
-            `Failed to analyze report: ${
-              error instanceof Error ? error.message : "Unknown error"
-            }`
+            error instanceof Error ? error.message : "Failed to analyze report"
           );
         }
       }),
@@ -239,39 +369,43 @@ export const appRouter = router({
     list: protectedProcedure.query(async ({ ctx }) => {
       try {
         const { getDiagnosisByUserId } = await import("./db");
-        return getDiagnosisByUserId(ctx.user.id);
+        return await getDiagnosisByUserId(ctx.user.id);
       } catch (error) {
-        console.error("Error in diagnosis.list:", error);
+        console.error("Failed to fetch diagnoses:", error);
         return [];
       }
     }),
 
     // Get a specific diagnosis by ID
-    getById: protectedProcedure
+    get: protectedProcedure
       .input((val: unknown) => {
         if (typeof val !== "object" || val === null)
           throw new Error("Invalid input");
         const obj = val as Record<string, unknown>;
-        if (typeof obj.diagnosisId !== "number")
-          throw new Error("diagnosisId must be a number");
-        return { diagnosisId: obj.diagnosisId };
+        if (typeof obj.id !== "number") throw new Error("id must be a number");
+        return { id: obj.id };
       })
-      .query(async ({ input }) => {
+      .query(async ({ ctx, input }) => {
         try {
-          const {
-            getDiagnosisById,
-            getFindingsByDiagnosisId,
-          } = await import("./db");
-          const diagnosis = await getDiagnosisById(input.diagnosisId);
-          if (!diagnosis) return null;
-
-          const findingsData = await getFindingsByDiagnosisId(
-            input.diagnosisId
+          const { getDiagnosisById, getFindingsByDiagnosisId } = await import(
+            "./db"
           );
-          return { ...diagnosis, findings: findingsData };
+          const diagnosis = await getDiagnosisById(input.id);
+
+          if (!diagnosis || diagnosis.userId !== ctx.user.id) {
+            throw new Error("Diagnosis not found or unauthorized");
+          }
+
+          const findings = await getFindingsByDiagnosisId(input.id);
+
+          return {
+            ...diagnosis,
+            findings,
+          };
         } catch (error) {
-          console.error("Error in diagnosis.getById:", error);
-          return null;
+          throw new Error(
+            error instanceof Error ? error.message : "Failed to fetch diagnosis"
+          );
         }
       }),
   }),
